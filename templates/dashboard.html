@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <style>
+        body{
+            background-image: image-set("{{assets}}/images.jpeg");
+            background-size: cover;
+        }
+        input{
+            background-color: brown;
+            width: 99%;
+        }
+        input:hover{
+            background-color: yellow;
+            animation: input-a;
+            animation-duration: 0.5s;
+        }
+    
+        @keyframes input-a{
+            0%{
+                background-color: brown;
+            }
+            100%{
+                background-color: yellow;
+            }
+        }
+
+    </style>
+
+
+</head>
+<body>
+    <menu style="display:flex;">
+        <form action="/user/expence/add" method="get"><input type="submit" value="add expence"><input type="hidden" value="{{token}}" name = "token"></form>
+        <form action="/user/icome/add" method="get"><input type="submit" value="add income"><input type="hidden" value="{{token}}" name = "token"></form>
+    </menu>
+    <p>{{token}}</p>   
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body{
+            background-image: image-set("{{assets}}/images.jpeg");
+            background-size: cover;
+        }
+        .btn{
+            background-color: brown;
+        }
+        .btn:hover{
+            background-color: yellow;
+            animation: btnf;
+            animation-duration: 0.5s;
+        }
+        @keyframes btnf{
+            0%{
+                background-color: brown;
+            }
+            100%{
+                background-color: yellow;
+            }
+        }
+    </style>
+
+</head>
+<body>
+    <menu>
+        <a href="/user/login">
+            <input type="button" value="login" class = "btn">
+        </a>
+        <a href="/user/sinup">
+            <input type="button" value="sinup" class = "btn">
+        </a>
+    </menu>
+</body>
+</html>

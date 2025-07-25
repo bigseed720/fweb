@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sinup</title>
+    <style>
+        #main-div{
+            background-color: rgba(28, 32, 58, 0.39);
+            width: 20%;
+            height: 40%;
+            border-radius: 20px;
+            margin-left: 40%;
+            margin-top: 10%;
+            
+        }
+        #pass-input{
+            width: 90%;
+            height: 20px;
+            margin-left: 3%;
+            border-radius: 20px;
+            background-color: rgba(12, 26, 65, 0.247);       
+            color: wheat;
+        }
+        #email-input{
+            width: 90%;
+            height: 20px;
+            margin-left: 3%;
+            border-radius: 20px;
+            background-color: rgba(12, 26, 65, 0.247);
+            color: wheat;
+        }
+
+        #username-input{
+            width: 90%;
+            height: 20px;
+            margin-left: 3%;
+            border-radius: 20px;
+            background-color: rgba(12, 26, 65, 0.247);
+            color: wheat;
+        }
+
+        body{
+            background-image: image-set("{{assets}}/images.jpeg");
+            background-size: cover;
+        }
+        #login-icon{
+            width: 40%;
+            margin-left: 30%;
+        }
+        #sinup{
+            font-size: small;
+            margin-left: 7%;
+            color: black;
+        }
+        #login-btn{
+            width: 80%;
+            font-size: large;
+            margin-left: 10%;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id = "main-div">
+        <form action="/user/sinup" method="post">
+            <img src="{{assets}}/login-icon.png" alt="" id = "login-icon">
+            <br>
+            <input type="text" name="username" id = "username-input" placeholder="username:"><br><br>
+            <input type="text" name="email" id = "email-input" placeholder="email:"><br><br>
+            <input type="password" name="password" id = "pass-input" placeholder="password:">
+            <a href="/user/sinup" id = "sinup">crate a new acount</a><br><br>
+            <input type="submit" value="Login" id = "login-btn">
+            <p> .</p>
+        </form>
+    </div>
+    
+    <script>
+        (function() {
+        // Code to be executed automatically
+        if("{{status}}" != "ok")
+        alert("{{status}}");
+        })();
+    </script>
+
+</body>
+</html>
