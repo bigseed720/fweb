@@ -1,11 +1,12 @@
-from fastapi import APIRouter , Request , Form , Body
+from fastapi import APIRouter , Request , Form 
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from core.Core import CheckIsMobile
 from repository.user import UserManager
 from fastapi.responses import RedirectResponse
 from datetime import datetime
-from typing import Annotated
+from repository.expence import ExpenceManager
+
 
 # Android Iphone Mobile Ipad
 
@@ -56,7 +57,7 @@ def sinup(request:Request , username:str = Form(...) , password:str = Form(...) 
             return tmp.TemplateResponse(request=request , name = 'acounts/sinup.html' , context={"assets":assets,"status":res["status"]})
         else:
             return tmp.TemplateResponse(request=request , name = 'acounts/sinup_mobile.html' , context={"assets":assets,"status":res["status"]})
-    res = UserManager.maketoken(username=username,password=password)
+    res = UserManager.createtoken(username=username,password=password)
     return RedirectResponse(url+f"user/dashboard/{res['token']}")
 
 @userrouter.post("/dashboard/{token}")
@@ -74,14 +75,25 @@ def exadd(request:Request , token:str):
     assets = str(request.base_url) + "assets"
     return tmp.TemplateResponse(request = request , name = "actions/expence_add.html" , context = {
         "token":token,
-        "assets":assets
+        "assets":assets,
+        "status":"ok"
     })
 
 @userrouter.post("/expence/add")
 def exadd(request:Request , token:str = Form(...) , amount:int = Form(...) , text:str = Form(...), my_date: datetime = Form(...) ):
     assets = str(request.base_url) + "assets"
-    return tmp.TemplateResponse(request = request , name = "actions/expence_add.html" , context = {
-        "token":token,
-        "assets":assets
-    })
-
+    res = UserManager.getuserbytoken(token)
+    if res['status'] != "ok":
+        return tmp.TemplateResponse(request = request , name = "actions/expence_add.html" , context = {
+            "token":token,
+            "assets":assets,
+            "status":res['status']
+        })
+    res = ExpenceManager.createexpence(amount , my_date , text , res['user']['id'])
+    if res['status'] != "ok":
+        return tmp.TemplateResponse(request = request , name = "actions/expence_add.html" , context = {
+            "token":token,
+            "assets":assets,
+            "status":res['status']
+        })
+    return(RedirectResponse(f"{request.base_url}user/dashboard/{token}"))

@@ -21,7 +21,7 @@ class Token(SQLModel , table = True):
 class UserManager():
 
     @staticmethod
-    def crateuser(username,password,email):
+    def createuser(username,password,email):
         statement = select(User).where(User.username == username)
         try:
             with Session(engine) as session:
@@ -36,7 +36,7 @@ class UserManager():
             return({"status":"there are some error"})
         
     @staticmethod
-    def generatetoken(session:Session):
+    def __generatetoken(session:Session):
         seed = list("abcdefghigklmnopqrstuvwxyz123456")
         token = "".join([choice(seed) for i in range(32)])
         statement = select(Token).where(Token.token == token)
@@ -54,7 +54,7 @@ class UserManager():
                 statement = select(User).where(User.username == username , User.password == password)
                 user = session.exec(statement=statement).first()
                 if user != None:
-                    gtoken = UserManager.generatetoken(session)
+                    gtoken = UserManager.__generatetoken(session)
                     statement = select(Token).where(Token.user == user.id)
                     stoken:Token = session.exec(statement).first()
                     if stoken == None:
@@ -85,8 +85,21 @@ class UserManager():
                 user = session.exec(statement).first()
                 return({"user":user,"status":"ok"})
 
-
-
+    def getuserbytoken(token:str):
+        try:
+            with Session(engine) as session:
+                statement = select(Token).where(Token.token == token)
+                token = session.exec(statement).first()
+                if token != None:
+                    statement = select(User).where(User.id == token.user)
+                    user = session.exec(statement).first()
+                    return({
+                        "status":"ok",
+                        "user":dict(user)
+                    })
+                return({"status":"token is invalig pleas login again"})
+        except:
+            return({"status":"there are some error"})
 
 
 engine = create_engine("sqlite:///databases/user_database.db")

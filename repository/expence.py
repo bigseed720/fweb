@@ -12,7 +12,7 @@ class Expence(SQLModel , table = True):
 class ExpenceManager():
     @staticmethod
     def createexpence(amount:int,datetime:datetime,text:str,user:int):
-        try:
+        
             expence = Expence(amount = amount , datetime = datetime , text = text , user = user)
             with Session(engine) as session:
                 session.add(expence)
@@ -20,10 +20,7 @@ class ExpenceManager():
             return({
                 "status":"ok"
             })
-        except:
-            return({
-                "there are some errors"
-            })
+
     @staticmethod
     def getexpences(user):
         
