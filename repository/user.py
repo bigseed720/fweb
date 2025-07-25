@@ -19,13 +19,12 @@ class Token(SQLModel , table = True):
 
 
 class UserManager():
-    engine = create_engine("sqlite:///database.db")
 
     @staticmethod
     def crateuser(username,password,email):
         statement = select(User).where(User.username == username)
         try:
-            with Session(UserManager.engine) as session:
+            with Session(engine) as session:
                 user = session.exec(statement).first()
                 if user == None:
                     user = User(username=username,password=password,email=email)
@@ -51,7 +50,7 @@ class UserManager():
     @staticmethod
     def createtoken(username,password):
         try:
-            with Session(UserManager.engine) as session:
+            with Session(engine) as session:
                 statement = select(User).where(User.username == username , User.password == password)
                 user = session.exec(statement=statement).first()
                 if user != None:
@@ -81,7 +80,7 @@ class UserManager():
             user = session.exec(statement).first()
             return({"user":user,"status":"ok"})
         else:
-            with Session(UserManager.engine) as session:
+            with Session(engine) as session:
                 statement = select(User).where(User.id == id)
                 user = session.exec(statement).first()
                 return({"user":user,"status":"ok"})
@@ -90,7 +89,7 @@ class UserManager():
 
 
 
-engine = create_engine("sqlite:///database.db")
+engine = create_engine("sqlite:///databases/user_database.db")
 SQLModel.metadata.create_all(engine)
 
 
