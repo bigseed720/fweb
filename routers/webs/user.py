@@ -6,10 +6,10 @@ from repository.user import UserManager
 from fastapi.responses import RedirectResponse
 from datetime import datetime
 from repository.expence import ExpenceManager
+from repository.income import IncomeManager
 
 
-# Android Iphone Mobile Ipad
-
+#TODO:make a protocol to show incomes , expences , income balance and expence balance in dashboard page
 
 
 
@@ -80,7 +80,7 @@ def exadd(request:Request , token:str):
     })
 
 @userrouter.post("/expence/add")
-def exadd(request:Request , token:str = Form(...) , amount:int = Form(...) , text:str = Form(...), my_date: datetime = Form(...) ):
+def exadd(request:Request , token:str = Form(...) , amount:int = Form(...) , text:str = Form(...), my_date: datetime = Form(...) , tag:str = Form(...)):
     assets = str(request.base_url) + "assets"
     res = UserManager.getuserbytoken(token)
     if res['status'] != "ok":
@@ -89,9 +89,37 @@ def exadd(request:Request , token:str = Form(...) , amount:int = Form(...) , tex
             "assets":assets,
             "status":res['status']
         })
-    res = ExpenceManager.createexpence(amount , my_date , text , res['user']['id'])
+    res = ExpenceManager.createexpence(amount = amount , datetime = my_date , text = text , user = res['user']['id'],tag=tag)
     if res['status'] != "ok":
         return tmp.TemplateResponse(request = request , name = "actions/expence_add.html" , context = {
+            "token":token,
+            "assets":assets,
+            "status":res['status']
+        })
+    return(RedirectResponse(f"{request.base_url}user/dashboard/{token}"))
+
+@userrouter.get("/income/add")
+def exadd(request:Request , token:str):
+    assets = str(request.base_url) + "assets"
+    return tmp.TemplateResponse(request = request , name = "actions/income_add.html" , context = {
+        "token":token,
+        "assets":assets,
+        "status":"ok"
+    })
+
+@userrouter.post("/income/add")
+def exadd(request:Request , token:str = Form(...) , amount:int = Form(...) , text:str = Form(...), my_date: datetime = Form(...) , tag:str = Form(...)):
+    assets = str(request.base_url) + "assets"
+    res = UserManager.getuserbytoken(token)
+    if res['status'] != "ok":
+        return tmp.TemplateResponse(request = request , name = "actions/income_add.html" , context = {
+            "token":token,
+            "assets":assets,
+            "status":res['status']
+        })
+    res = IncomeManager.createincome(amount = amount , datetime = my_date , text = text , user = res['user']['id'],tag=tag)
+    if res['status'] != "ok":
+        return tmp.TemplateResponse(request = request , name = "actions/income_add.html" , context = {
             "token":token,
             "assets":assets,
             "status":res['status']

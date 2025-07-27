@@ -1,25 +1,13 @@
 from sqlmodel import SQLModel , Field , create_engine , Session , select
 from random import choice
+from repository.models import User , Token , engine
 
 
-
-class User(SQLModel , table=True):
-    id:int = Field(default = None ,primary_key=True)    
-    username:str
-    password:str
-    email:str
-    autentication:bool = Field(default = False)
-
-class Token(SQLModel , table = True):
-    id:int = Field(default = None ,primary_key = True)
-    token:str
-    user:int
-    verified:bool = False
 
 
 
 class UserManager():
-
+    #this ethod used for create a new row in database for users
     @staticmethod
     def createuser(username,password,email):
         statement = select(User).where(User.username == username)
@@ -34,7 +22,8 @@ class UserManager():
                 return({"status":"username is alredy exist"})
         except:
             return({"status":"there are some error"})
-        
+    
+    #this method used for generate a random text  and check is there
     @staticmethod
     def __generatetoken(session:Session):
         seed = list("abcdefghigklmnopqrstuvwxyz123456")
@@ -46,7 +35,8 @@ class UserManager():
         else:
             return UserManager.generatetoken(session)
     
-
+    #this method used __generatetoken to generate a random text  and check is there
+    #and make a communication between token and user
     @staticmethod
     def createtoken(username,password):
         try:
@@ -73,6 +63,8 @@ class UserManager():
                     return({"status":"password or username is not corect"})
         except:
             return({"status":"there are some errors"})
+        
+    #this method is searching in database for users by their id
     @staticmethod
     def getuserbyid(id , session:Session = None):
         if session:
@@ -85,26 +77,21 @@ class UserManager():
                 user = session.exec(statement).first()
                 return({"user":user,"status":"ok"})
 
+    #this method firs finde tken and get user id and use getuserbyid to finde user
     def getuserbytoken(token:str):
         try:
             with Session(engine) as session:
                 statement = select(Token).where(Token.token == token)
                 token = session.exec(statement).first()
                 if token != None:
-                    statement = select(User).where(User.id == token.user)
-                    user = session.exec(statement).first()
+                    user = UserManager.getuserbyid(token.id)
                     return({
                         "status":"ok",
-                        "user":dict(user)
+                        "user":dict(user['user'])
                     })
                 return({"status":"token is invalig pleas login again"})
         except:
             return({"status":"there are some error"})
-
-
-engine = create_engine("sqlite:///databases/user_database.db")
-SQLModel.metadata.create_all(engine)
-
 
 
 

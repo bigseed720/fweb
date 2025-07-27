@@ -1,19 +1,15 @@
-from sqlmodel import SQLModel , create_engine , Session , Field , select
+from sqlmodel import SQLModel , Session , select
 from datetime import datetime
+from repository.models import Expence , engine
 
 
-class Expence(SQLModel , table = True):
-    id:int = Field(default = None , primary_key=True)
-    amount:int
-    datetime:datetime
-    text:str
-    user:int
 
 class ExpenceManager():
+    #this method used for create a new row for expence in database
     @staticmethod
-    def createexpence(amount:int,datetime:datetime,text:str,user:int):
+    def createexpence(amount:int,datetime:datetime,text:str,user:int,tag:str):
         
-            expence = Expence(amount = amount , datetime = datetime , text = text , user = user)
+            expence = Expence(amount = amount , datetime = datetime , text = text , user = user , tag = tag)
             with Session(engine) as session:
                 session.add(expence)
                 session.commit()
@@ -21,6 +17,7 @@ class ExpenceManager():
                 "status":"ok"
             })
 
+    #this method used for finde expences wich communicated to user
     @staticmethod
     def getexpences(user):
         
@@ -32,5 +29,3 @@ class ExpenceManager():
                     "expences":expences
                 })
         
-engine = create_engine("sqlite:///databases/expence_database.db")
-SQLModel.metadata.create_all(engine)
