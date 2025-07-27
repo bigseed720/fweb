@@ -34,10 +34,30 @@
 
 </head>
 <body>
-    <menu style="display:flex;">
-        <form action="/user/expence/add" method="get"><input type="submit" value="add expence"><input type="hidden" value="{{token}}" name = "token"></form>
-        <form action="/user/icome/add" method="get"><input type="submit" value="add income"><input type="hidden" value="{{token}}" name = "token"></form>
-    </menu>
-    <p>{{token}}</p>   
+    <div style="background-color: black;">
+        <menu style="display:flex;">
+            <form action="/user/expence/add" method="get"><input type="submit" value="add expence"><input type="hidden" value="{{token}}" name = "token"></form>
+            <form action="/user/income/add" method="get"><input type="submit" value="add income"><input type="hidden" value="{{token}}" name = "token"></form>
+        </menu>
+    </div>
+    <div>
+        <p>expence balance :</p>
+        <p>income balance  :</p>
+    </div>
+    <div style="display: flex;height: max-content; background-color: aqua;">
+        <p style="width: 50%;">expences</p>
+        <p>incomes</p>
+    </div>
+    <div style="display: flex;height: max-content; background-color: aqua;">
+        <div style="background-color: blue;overflow:scroll;height: 200px;width: 50%;">
+            <button style="width: 100%;">expence</button>
+        </div>
+        <div style="background-color: brown;overflow:scroll;height: 200px;width: 50%;">
+            <button style="width: 100%;">income</button>
+        </div>
+    </div>
+    <div style="display: flex;overflow: scroll;">
+      <div style="display: block;"><button style="width: 100px;">day</button><br><button style="width: 100px;">expence</button><br><button style="width: 100px;">income</button></div>
+    </div>
 </body>
 </html>
