@@ -67,5 +67,14 @@
             {%endfor%}
         </div>
     </div>
+
+    <script>
+        (function main(){
+            if("{{status}}" != "ok"){
+                alert("{{status}}")
+            }
+        })()
+    </script>
+
 </body>
 </html>
