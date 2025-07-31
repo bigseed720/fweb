@@ -18,12 +18,12 @@ class IncomeManager():
 
     #this method used for finde income wich communicated to user
     @staticmethod
-    def getincome(user):
+    def getincomes(user):
             statement = select(Income).where(Income.user == user)
             with Session(engine) as session:
                 incomes = [dict(income) for income in session.exec(statement)]
                 return({
                     "status":"ok",
-                    "expences":incomes
+                    "incomes":incomes
                 })
         

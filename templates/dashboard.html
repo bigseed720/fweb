@@ -41,8 +41,8 @@
         </menu>
     </div>
     <div>
-        <p>expence balance :</p>
-        <p>income balance  :</p>
+        <p>expence balance : {{expence_balance}}</p>
+        <p>income balance  : {{income_balance}}</p>
     </div>
     <div style="display: flex;height: max-content; background-color: aqua;">
         <p style="width: 50%;">expences</p>
@@ -50,14 +50,22 @@
     </div>
     <div style="display: flex;height: max-content; background-color: aqua;">
         <div style="background-color: blue;overflow:scroll;height: 200px;width: 50%;">
-            <button style="width: 100%;">expence</button>
+            {%for expence in expences%}
+                <form action="/user/expence/manage" method="post">
+                    <input type="hidden" value="{{token}}" name = "token">
+                    <input type="hidden" value="{{expence['id']}}" name = "id">
+                    <input type="submit" value="{{expence['tag']}} : {{expence['amount']}}" style="width: 100%;">
+                </form>
+            {%endfor%}
         </div>
         <div style="background-color: brown;overflow:scroll;height: 200px;width: 50%;">
-            <button style="width: 100%;">income</button>
+            {%for income in incomes%}
+                <form action="" method="post">
+                    <input type="hidden" value="{{income['id']}}">
+                    <input type="submit" value="{{income['tag']}} : {{income['amount']}}" style="width: 100%;">
+                </form>
+            {%endfor%}
         </div>
-    </div>
-    <div style="display: flex;overflow: scroll;">
-      <div style="display: block;"><button style="width: 100px;">day</button><br><button style="width: 100px;">expence</button><br><button style="width: 100px;">income</button></div>
     </div>
 </body>
 </html>

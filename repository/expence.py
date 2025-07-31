@@ -28,4 +28,19 @@ class ExpenceManager():
                     "status":"ok",
                     "expences":expences
                 })
+    
+    @staticmethod
+    def getexencebyid(id:int):
+        try:
+             statement = select(Expence).where(Expence.id == id)
+             with Session(engine) as session:
+                expence = session.exec(statement).first()
+                if expence != None:
+                    return({
+                         "expence":dict(expence),
+                         "status":"ok"
+                    })
+                return({"status":"expence is not there"})
+        except:
+            return({"status":"there are some errors"})
         

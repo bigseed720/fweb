@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        textarea{
+            min-width: 100%;
+            max-height: 100%;
+            background-color: rgba(12, 26, 65, 0.247);
+            color: wheat;  
+        }
+        #input-number{
+            width: 10%;
+            background-color: rgba(12, 26, 65, 0.247);
+            border-color: black;
+            color: wheat;   
+        }
+        #input-submit{
+            width: 10%;
+            background-color: rgba(12, 26, 65, 0.247);
+            border-color: black;
+            color: wheat;   
+        }
+        #input-tag{
+            width: 10%;
+            background-color: rgba(12, 26, 65, 0.247);
+            border-color: black;
+            color: wheat;   
+        }
+        #input-date{
+            background-color: rgba(12, 26, 65, 0.247);
+            
+        }
+        body{
+            background-image: image-set("{{assets}}/images.jpeg");
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+    <form action="/user/expence/add" method="post">
+        <input type="hidden" value="{{token}}" name ="token">
+        <div style="display: flex;">
+            <input type="number" name="amount" id="input-number" placeholder="amount :" value="{{expence['amount']}}">
+            <input type="datetime-local" name="my_date" id="input-date" value="{{expence['datetime']}}">
+            <input type="submit" value="save" id="input-submit">
+            <input type="text" name = "tag" id = "input-tag" placeholder="tag :" value="{{expence['tag']}}">
+        </div>
+        <textarea name="text" id="" rows="10" >{{expence['text']}}</textarea>
+        
+    </form>
+
+    <script>
+        (function start(){
+            if("{{status}}" !="ok"){
+                alert("{{status}}")
+            }
+        })()
+    </script>
+</body>
+</html>

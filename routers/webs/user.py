@@ -7,7 +7,8 @@ from fastapi.responses import RedirectResponse
 from datetime import datetime
 from repository.expence import ExpenceManager
 from repository.income import IncomeManager
-
+import json
+getbalance = lambda l : sum([ i['amount'] for i in l])
 
 #TODO:make a protocol to show incomes , expences , income balance and expence balance in dashboard page
 
@@ -16,6 +17,11 @@ from repository.income import IncomeManager
 userrouter = APIRouter(prefix="/user")
 
 tmp = Jinja2Templates("templates")
+
+
+
+
+
 
 @userrouter.get('/login')
 def login(request:Request):
@@ -60,15 +66,49 @@ def sinup(request:Request , username:str = Form(...) , password:str = Form(...) 
     res = UserManager.createtoken(username=username,password=password)
     return RedirectResponse(url+f"user/dashboard/{res['token']}")
 
+
+
+
+
 @userrouter.post("/dashboard/{token}")
 def dashboard(request:Request,token:str):
     assets = str(request.base_url)+"assets"
-    return tmp.TemplateResponse(request=request,name = "dashboard.html",context = {'token':token , "assets":assets})
+    res = UserManager.getuserbytoken(token)
+    if res['status'] != 'ok':
+        return RedirectResponse(str(request.base_url)+f"?status={res['status']}")
+    expences = ExpenceManager.getexpences(res['user']['id'])['expences']
+    incomes = IncomeManager.getincomes(res['user']['id'])['incomes']
+    return tmp.TemplateResponse(request=request,name = "dashboard.html",context = {
+        'token':token ,
+        "assets":assets,
+        "expences":expences,
+        "incomes":incomes,
+        "income_balance":getbalance(incomes),
+        "expence_balance":getbalance(expences)
+        })
 
 @userrouter.get("/dashboard/{token}")
 def dashboard(request:Request,token:str):
     assets = str(request.base_url)+"assets"
-    return tmp.TemplateResponse(request=request,name = "dashboard.html",context = {'token':token , "assets":assets})
+    res = UserManager.getuserbytoken(token)
+    if res['status'] != 'ok':
+        return RedirectResponse(str(request.base_url)+f"?status={res['status']}")
+    expences = ExpenceManager.getexpences(res['user']['id'])['expences']
+    incomes = IncomeManager.getincomes(res['user']['id'])['incomes']
+    return tmp.TemplateResponse(request=request,name = "dashboard.html",context = {
+        'token':token ,
+        "assets":assets,
+        "expences":expences,
+        "incomes":incomes,
+        "income_balance":getbalance(incomes),
+        "expence_balance":getbalance(expences)
+        })
+
+
+
+
+
+
 
 @userrouter.get("/expence/add")
 def exadd(request:Request , token:str):
@@ -125,3 +165,16 @@ def exadd(request:Request , token:str = Form(...) , amount:int = Form(...) , tex
             "status":res['status']
         })
     return(RedirectResponse(f"{request.base_url}user/dashboard/{token}"))
+
+
+@userrouter.post("/expence/manage")
+def expence_manage(request:Request,status:str = "ok",token:str=Form(...),id:int=Form(...)):
+    assets = str(request.base_url)+"assets"
+    res = ExpenceManager.getexencebyid(id)
+    expence = res['expence']
+    return(tmp.TemplateResponse(request=request,name="actions/expence_manage.html",context={
+        "assets":assets,
+        "status":status,
+        "token":token,
+        "expence":expence
+    }))

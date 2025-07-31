@@ -20,10 +20,13 @@ app.include_router(userrouter)
 
 
 @app.get("/")
-def index(request:Request):    
+def index(request:Request,status:str = "ok"):    
     url = str(request.base_url)
-    return(tmp.TemplateResponse(request=request , name='index.html' , context={"assets":url+"assets"}))
+    return(tmp.TemplateResponse(request=request , name='index.html' , context={
+        "assets":url+"assets",
+        "status":status
+        }))
 
-
+ 
 
 
