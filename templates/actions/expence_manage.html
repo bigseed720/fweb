@@ -50,7 +50,11 @@
             <input type="text" name = "tag" id = "input-tag" placeholder="tag :" value="{{expence['tag']}}">
         </div>
         <textarea name="text" id="" rows="10" >{{expence['text']}}</textarea>
-        
+    </form>
+    <form action="/user/expence/delete" method="post">
+        <input type="hidden" value="{{expence['id']}}" name = "id">
+        <input type="hidden" value="{{token}}" name = "token">
+        <input type="submit" value="delete">
     </form>
 
     <script>

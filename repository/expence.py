@@ -30,17 +30,27 @@ class ExpenceManager():
                 })
     
     @staticmethod
-    def getexencebyid(id:int):
-        try:
-             statement = select(Expence).where(Expence.id == id)
+    def getexpencebyid(id:int,user:int):
+
+             statement = select(Expence).where(Expence.id == id,Expence.user == user)
              with Session(engine) as session:
                 expence = session.exec(statement).first()
                 if expence != None:
                     return({
-                         "expence":dict(expence),
+                         "expence":expence,
                          "status":"ok"
                     })
                 return({"status":"expence is not there"})
-        except:
-            return({"status":"there are some errors"})
+
+    
+    @staticmethod
+    def deleteexpence(id:int,user:int):
+            res = ExpenceManager.getexpencebyid(id=id,user=user)
+            if res['status'] != "ok":
+                 return({"status":res['status']})
+            with Session(engine) as session:
+                print(res)
+                session.delete(res['expence'])
+                session.commit()
+            return({"status":"ok"})
         

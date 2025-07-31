@@ -71,7 +71,7 @@ def sinup(request:Request , username:str = Form(...) , password:str = Form(...) 
 
 
 @userrouter.post("/dashboard/{token}")
-def dashboard(request:Request,token:str):
+def dashboard(request:Request,token:str,status:str="ok"):
     assets = str(request.base_url)+"assets"
     res = UserManager.getuserbytoken(token)
     if res['status'] != 'ok':
@@ -84,11 +84,12 @@ def dashboard(request:Request,token:str):
         "expences":expences,
         "incomes":incomes,
         "income_balance":getbalance(incomes),
-        "expence_balance":getbalance(expences)
+        "expence_balance":getbalance(expences),
+        "status":status
         })
 
 @userrouter.get("/dashboard/{token}")
-def dashboard(request:Request,token:str):
+def dashboard(request:Request,token:str,status:str = "ok"):
     assets = str(request.base_url)+"assets"
     res = UserManager.getuserbytoken(token)
     if res['status'] != 'ok':
@@ -101,7 +102,8 @@ def dashboard(request:Request,token:str):
         "expences":expences,
         "incomes":incomes,
         "income_balance":getbalance(incomes),
-        "expence_balance":getbalance(expences)
+        "expence_balance":getbalance(expences),
+        "status":status
         })
 
 
@@ -170,11 +172,29 @@ def exadd(request:Request , token:str = Form(...) , amount:int = Form(...) , tex
 @userrouter.post("/expence/manage")
 def expence_manage(request:Request,status:str = "ok",token:str=Form(...),id:int=Form(...)):
     assets = str(request.base_url)+"assets"
-    res = ExpenceManager.getexencebyid(id)
+    res = UserManager.getuserbytoken(token)
+    if res['status'] != "ok":
+        return(RedirectResponse(f"{request.base_url}user/dashboard/{token}/?status={status}"))
+    res = ExpenceManager.getexpencebyid(id,res['user']['id'])
+    if res['status'] != "ok":
+        return(RedirectResponse(f"{request.base_url}user/dashboard/{token}/?status={status}"))
+    
     expence = res['expence']
     return(tmp.TemplateResponse(request=request,name="actions/expence_manage.html",context={
         "assets":assets,
         "status":status,
         "token":token,
-        "expence":expence
+        "expence":dict(expence)
     }))
+
+
+
+
+@userrouter.post("/expence/delete/")
+def expence_delete(request:Request,id:int=Form(...),token:str=Form(...)):
+    res = UserManager.getuserbytoken(token=token)
+    if res['status'] != "ok":
+        return(RedirectResponse(f"{request.base_url}user/dashboard/{token}/?status={res['status']}"))
+    user = res['user']
+    res = ExpenceManager.deleteexpence(id=id,user=user['id'])
+    return(RedirectResponse(f"{request.base_url}user/dashboard/{token}/?status={res['status']}"))
