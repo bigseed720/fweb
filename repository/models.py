@@ -4,7 +4,7 @@ from datetime import datetime
 
 class Expence(SQLModel , table = True):
     id:int = Field(default = None , primary_key=True)
-    amount:int
+    amount:float
     datetime:datetime
     text:str
     user:int
@@ -13,7 +13,7 @@ class Expence(SQLModel , table = True):
 
 class Income(SQLModel , table = True):
     id:int = Field(default = None , primary_key=True)
-    amount:int
+    amount:float
     datetime:datetime
     text:str
     user:int
