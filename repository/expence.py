@@ -7,7 +7,7 @@ from repository.models import Expence , engine
 class ExpenceManager():
     #this method used for create a new row for expence in database
     @staticmethod
-    def createexpence(amount:int,datetime:datetime,text:str,user:int,tag:str):
+    def createexpence(amount:float,datetime:datetime,text:str,user:int,tag:str):
         
             expence = Expence(amount = amount , datetime = datetime , text = text , user = user , tag = tag)
             with Session(engine) as session:

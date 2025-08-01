@@ -6,7 +6,7 @@ from repository.models import Income , engine
 class IncomeManager():
     #this method used for create a new row for income in database
     @staticmethod
-    def createincome(amount:int,datetime:datetime,text:str,user:int,tag:str):
+    def createincome(amount:float,datetime:datetime,text:str,user:int,tag:str):
         
             income = Income(amount = amount , datetime = datetime , text = text , user = user , tag = tag)
             with Session(engine) as session:

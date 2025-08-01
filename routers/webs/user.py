@@ -122,7 +122,7 @@ def exadd(request:Request , token:str):
     })
 
 @userrouter.post("/expence/add")
-def exadd(request:Request , token:str = Form(...) , amount:int = Form(...) , text:str = Form(...), my_date: datetime = Form(...) , tag:str = Form(...)):
+def exadd(request:Request , token:str = Form(...) , amount:float = Form(...) , text:str = Form(...), my_date: datetime = Form(...) , tag:str = Form(...)):
     assets = str(request.base_url) + "assets"
     res = UserManager.getuserbytoken(token)
     if res['status'] != "ok":
@@ -150,7 +150,7 @@ def exadd(request:Request , token:str):
     })
 
 @userrouter.post("/income/add")
-def exadd(request:Request , token:str = Form(...) , amount:int = Form(...) , text:str = Form(...), my_date: datetime = Form(...) , tag:str = Form(...)):
+def exadd(request:Request , token:str = Form(...) , amount:float = Form(...) , text:str = Form(...), my_date: datetime = Form(...) , tag:str = Form(...)):
     assets = str(request.base_url) + "assets"
     res = UserManager.getuserbytoken(token)
     if res['status'] != "ok":
@@ -186,9 +186,6 @@ def expence_manage(request:Request,status:str = "ok",token:str=Form(...),id:int=
         "token":token,
         "expence":dict(expence)
     }))
-
-
-
 
 @userrouter.post("/expence/delete/")
 def expence_delete(request:Request,id:int=Form(...),token:str=Form(...)):
