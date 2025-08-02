@@ -54,3 +54,16 @@ class ExpenceManager():
                 session.commit()
             return({"status":"ok"})
         
+    @staticmethod
+    def editexpence(id:int,tag:str,amount:float,datetime_:datetime,text:str,user):
+            res = ExpenceManager.getexpencebyid(id,user)
+            if res['status'] != "ok":
+                return({"status":res['status']})
+            expence:Expence = res['expence']
+            expence.update(amount=amount,datetime=datetime_,text=text,tag=tag)
+            with Session(engine) as session:
+                session.add(expence)
+                session.commit()
+            return({"status":"ok"})
+            
+            

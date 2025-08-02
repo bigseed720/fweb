@@ -3,12 +3,11 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from core.Core import CheckIsMobile
 from repository.user import UserManager
-from fastapi.responses import RedirectResponse
 from datetime import datetime
 from repository.expence import ExpenceManager
 from repository.income import IncomeManager
 import json
-getbalance = lambda l : sum([ i['amount'] for i in l])
+getsum = lambda l : sum([ i['amount'] for i in l])
 
 #TODO:make a protocol to show incomes , expences , income balance and expence balance in dashboard page
 
@@ -83,8 +82,8 @@ def dashboard(request:Request,token:str,status:str="ok"):
         "assets":assets,
         "expences":expences,
         "incomes":incomes,
-        "income_balance":getbalance(incomes),
-        "expence_balance":getbalance(expences),
+        "income_balance":getsum(incomes),
+        "expence_balance":getsum(expences),
         "status":status
         })
 
@@ -101,8 +100,8 @@ def dashboard(request:Request,token:str,status:str = "ok"):
         "assets":assets,
         "expences":expences,
         "incomes":incomes,
-        "income_balance":getbalance(incomes),
-        "expence_balance":getbalance(expences),
+        "income_balance":getsum(incomes),
+        "expence_balance":getsum(expences),
         "status":status
         })
 
@@ -194,4 +193,14 @@ def expence_delete(request:Request,id:int=Form(...),token:str=Form(...)):
         return(RedirectResponse(f"{request.base_url}user/dashboard/{token}/?status={res['status']}"))
     user = res['user']
     res = ExpenceManager.deleteexpence(id=id,user=user['id'])
+    return(RedirectResponse(f"{request.base_url}user/dashboard/{token}/?status={res['status']}"))
+
+
+@userrouter.post("/expence/edit")
+def expence_edit(request:Request,id:int=Form(...),amount:float=Form(...),tag:str=Form(...),text:str=Form(...),token:str=Form(...),my_date:datetime=Form(...)):
+    res = UserManager.getuserbytoken(token)
+    if res['status'] != "ok":
+        return(RedirectResponse(f"{request.base_url}user/dashboard/{token}/?status={res['status']}"))
+    user = res['user']['id']
+    res = ExpenceManager.editexpence(id,tag,amount,my_date,text,user)
     return(RedirectResponse(f"{request.base_url}user/dashboard/{token}/?status={res['status']}"))
